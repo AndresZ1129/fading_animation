@@ -16,7 +16,9 @@ class FadingTextAnimation extends StatefulWidget {
   _FadingTextAnimationState createState() => _FadingTextAnimationState();
 }
 
-class _FadingTextAnimationState extends State<FadingTextAnimation> {
+class _FadingTextAnimationState extends State<FadingTextAnimation>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   bool _isVisible = true;
   void toggleVisibility() {
     setState(() {
@@ -25,15 +27,63 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final tabs = ['Tab 1', 'Tab 2'];
     return Scaffold(
-      appBar: AppBar(title: Text('Fading Text Animation')),
-      body: Center(
-        child: AnimatedOpacity(
-          opacity: _isVisible ? 1.0 : 0.0,
-          duration: Duration(seconds: 1),
-          child: Text('Hello, Flutter!', style: TextStyle(fontSize: 24)),
+      appBar: AppBar(
+        title: Text('Fading Text Animation'),
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: false,
+          tabs: [for (final tab in tabs) Tab(text: tab)],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          Center(
+            // Tab 1
+            child: GestureDetector(
+              onTap: toggleVisibility,
+              child: AnimatedOpacity(
+                opacity: _isVisible ? 1.0 : 0.0,
+                duration: const Duration(seconds: 1),
+                curve: Curves.easeInOut,
+                child: const Text(
+                  'Hello, Flutter!',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+          ),
+          // Tab 2
+          Center(
+            child: GestureDetector(
+              onTap: toggleVisibility,
+              child: AnimatedOpacity(
+                opacity: _isVisible ? 1.0 : 0.0,
+                duration: const Duration(seconds: 1),
+                curve: Curves.bounceIn,
+                child: const Text(
+                  'Hello, Flutter!',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: toggleVisibility,
