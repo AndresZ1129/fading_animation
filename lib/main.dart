@@ -138,9 +138,9 @@ class _FadingTextAnimationState extends State<FadingTextAnimation>
                 opacity: _isVisible ? 1.0 : 0.0,
                 duration: const Duration(seconds: 1),
                 curve: Curves.easeInOut,
-                child: const Text(
+                child: Text(
                   'Hello, Flutter!',
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24, color: _textColor),
                 ),
               ),
             ),
@@ -153,9 +153,9 @@ class _FadingTextAnimationState extends State<FadingTextAnimation>
                 opacity: _isVisible ? 1.0 : 0.0,
                 duration: const Duration(seconds: 1),
                 curve: Curves.bounceIn,
-                child: const Text(
+                child: Text(
                   'Hello, Flutter!',
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24, color: _textColor),
                 ),
               ),
             ),
