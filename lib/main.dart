@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,10 +43,43 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
+  Color _textColor = Colors.black;
+
   void toggleVisibility() {
     setState(() {
       _isVisible = !_isVisible;
     });
+  }
+
+   void _pickColor() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        Color selectedColor = _textColor;
+        return AlertDialog(
+          title: Text("Pick a color"),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _textColor,
+              onColorChanged: (color) {
+                selectedColor = color;
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _textColor = selectedColor;
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text("Select"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -59,13 +93,17 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               widget.changeTheme(Theme.of(context).brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark);
             },
           ),
+          IconButton(
+            icon: Icon(Icons.palette),
+            onPressed: _pickColor,
+          ),
         ],
       ),
       body: Center(
         child: AnimatedOpacity(
           opacity: _isVisible ? 1.0 : 0.0,
           duration: Duration(seconds: 1),
-          child: Text('Hello, Flutter!', style: TextStyle(fontSize: 24)),
+          child: Text('Hello, Flutter!', style: TextStyle(fontSize: 24, color: _textColor)),
         ),
       ),
       floatingActionButton: FloatingActionButton(
